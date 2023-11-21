@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Run Bot",
+        "type": "node",
+        "request": "launch",
+        "program": "${workspaceFolder}/index.js",
+        "cwd": "${workspaceFolder}",
+        "args": [],
+        "runtimeArgs": ["--inspect"],
+        "console": "integratedTerminal",
+        "protocol": "inspector"
+      }
+    ]
+  }
+  
