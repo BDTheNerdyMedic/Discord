@@ -11,10 +11,13 @@ const client = new Client({
 });
 
 const prefix = '!';
-const defaultPort = 25565;
+const defaultVanillaPort = 25565;
+const defaultModdedPort = 25569;
+const defaultBedrockPort = 19132;
 
-let baseURL = 'https://api.mcsrvstat.us/3/'; // Replace with your actual base URL
-let server = 'rgminecraft.com'; // Replace with your actual default server
+let baseURLVanilla = 'https://api.mcsrvstat.us/3/regimentcraft.minecraft.best';
+let baseURLModded = 'https://api.mcsrvstat.us/3/rgminecraft.com';
+let baseURLBedrock = 'https://api.mcsrvstat.us/bedrock/3/';
 
 client.once('ready', () => {
   console.log(`Logged in as ${client.user.tag}`);
@@ -28,12 +31,27 @@ client.on('messageCreate', async (message) => {
   const command = args.shift().toLowerCase();
 
   if (command === 'serverstatus') {
-    let specifiedPort = args.length > 0 ? parseInt(args[0]) : null;
-    const port = specifiedPort || defaultPort;
+    let serverType = args[0] && args[0].toLowerCase();
+    let specifiedPort = args[1] ? parseInt(args[1]) : null;
+
+    switch (serverType) {
+      case 'modded':
+        port = specifiedPort || defaultModdedPort;
+        baseURL = baseURLModded;
+        break;
+      case 'bedrock':
+        port = specifiedPort || defaultBedrockPort;
+        baseURL = baseURLBedrock;
+        break;
+      default:
+        port = specifiedPort || defaultVanillaPort;
+        baseURL = baseURLVanilla;
+        break;
+    }
 
     try {
       // Check online status first
-      const response = await axios.get(baseURL + server + ':' + port);
+      const response = await axios.get(baseURL + ':' + port);
       const isOnline = response.data.online;
 
       if (isOnline) {
